@@ -11,11 +11,11 @@ app.set('port', process.env.PORT || 3000 )
 app.locals.title = 'Sim Youtube';
 
 app.get('/', (request, response) => {
-  response.send('Inital response setup is working')
+  response.json('Inital response setup is working')
 })
 
 app.get('/api/v1/youtubers', (request, response) => {
-  database('youtubers').select()
+  database('youtubers').select('*')
   .then(youtubers => response.status(200).json(youtubers))
   .catch(error => response.json(`There was an error gathering the Youtubers`))
 })
