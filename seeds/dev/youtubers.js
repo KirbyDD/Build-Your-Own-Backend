@@ -6,19 +6,21 @@ const createYoutuber = (knex, youtuber) => {
     name: youtuber.name,
     subscribers: youtuber.subcribers
   }, 'id')
-  // .then(ids => {
-  //   const youtuberId = ids[0]
+  .then(ids => {
+    const youtuberId = ids[0];
+    const vids = youtubeVideos.filter(video => {
+      return video.creatorID === youtuber.id
+    })
 
-    // find all video asssociated with this youtuber
-    // createVideo promise for each video youtuber has
-    // push all promises into an array
-    // return Promise.all
-  // })
+    const videoPromises = vids.map(video => createVideo(knex, video, youtuberId))
+
+    return Promise.all(videoPromises)
+  })
 }
 
-const createVideo = (knex, video) => {
+const createVideo = (knex, video, youtuberId) => {
   return knex('youtube_videos').insert({
-    creator_id: video.creatorID,
+    creator_id: youtuberId,
     title: video.title,
     run_time: video.runTime,
     views: video.views,
