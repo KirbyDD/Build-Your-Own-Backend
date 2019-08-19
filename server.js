@@ -46,6 +46,34 @@ app.get('api/v1/videos/:id', (request, response) => {
   .catch(error => response.json('There was an error gathering the videos'))
 })
 
+app.post('api/v1/videos/', (request, response) => {
+  const {newVideo} = request.body 
+  database('youtube_videos').select('*')
+  .then(videos => {
+    if(newVideo){
+      [...videos, newVideo]
+      return response.status(201).json(newVideo)
+    } else {
+      return response.status(422).json('Error posting video. newVideo variable not found in body.')
+    }
+  })
+  .catch(error => response.json('Error posting video to server'))
+})
+
+app.post('api/v1/youtubers', (request, response) => {
+  const {newYoutuber} = request.body;
+  database('youtubers').select('*')
+  .then(youtubers => {
+    if(newYoutuber){
+      [...youtubers, newYoutuber]
+      return response.status(201).json(youtuber)
+    } else {
+      return response.status(422).json('Error posting youtuber. newYoutuber variable not found in body.')
+    }
+  })
+  .catch(error => response.json('Error posting youtuber to server'))
+})
+
 app.listen(app.get('port'), () => (
   console.log(` ${app.locals.title} is running on http://localhost:${app.get('port')}.`)
 ))
