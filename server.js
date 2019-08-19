@@ -46,7 +46,7 @@ app.get('api/v1/videos/:id', (request, response) => {
   .catch(error => response.json('There was an error gathering the videos'))
 })
 
-app.post('api/v1/videos/', (request, response) => {
+app.post('api/v1/videos', (request, response) => {
   const {newVideo} = request.body 
   database('youtube_videos').select('*')
   .then(videos => {
@@ -72,6 +72,20 @@ app.post('api/v1/youtubers', (request, response) => {
     }
   })
   .catch(error => response.json('Error posting youtuber to server'))
+})
+
+app.delete('api/v1/videos/:id', (request, response) => {
+  const {id} = match.params;
+  database('youtube_videos').select('*')
+  .then(videos => {
+    let vid = videos.find(video => video.id == id)
+    if(vid){
+      videos.filter(video => video.id != vid.id)
+      return response.status(201).json(vidoes)
+    } else {
+      return response.status(422).json('Error deleting video. Video to delete variable not found.')
+    }
+  })
 })
 
 app.listen(app.get('port'), () => (
